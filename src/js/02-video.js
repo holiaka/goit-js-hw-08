@@ -18,7 +18,7 @@ player.on(
 // Other func.
 function onPlayVideo(evt) {
   localStorage.setItem('videoplayer-current-time', evt.seconds);
-  }
+}
 
 player.setCurrentTime(hasTimeInStorage());
 
