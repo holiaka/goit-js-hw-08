@@ -9,20 +9,25 @@ const userMessage = document.querySelector('textarea');
 // Utility variables
 const STORAGE_KEY = 'feedback-form-state';
 
-const userTypedText = {};
+let userTypedText = {};
 
 let storageData = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
 // Code for recover text data
 try {
   if (storageData !== null) {
-    userEmail.value = storageData.email;
-    userTypedText['email'] = storageData.email;
-    userMessage.value = storageData.message;
-    userTypedText['message'] = storageData.message;
+    if (storageData.email !== undefined && storageData.message !== undefined) {
+      userEmail.value = userTypedText['email'] = storageData.email;
+      userMessage.value = userTypedText['message'] = storageData.message;
+    } else if (storageData.email === undefined) {
+      userEmail.value = userTypedText['email'] = '';
+      userMessage.value = userTypedText['message'] = storageData.message;
+    } else if (storageData.message === undefined) {
+      userEmail.value = userTypedText['email'] = storageData.email;
+      userMessage.value = userTypedText['message'] = '';
+    }
   } else {
-    userTypedText['email'] = '';
-    userTypedText['message'] = '';
+    userTypedText['email'] = userTypedText['message'] = '';
   }
 } catch (error) {
   console.log(error.name);
@@ -42,10 +47,10 @@ callbackForm.addEventListener('submit', onSubmitMessage);
 function onSubmitMessage(evt) {
   evt.preventDefault();
   if (userEmail.value.length >= 3 && userMessage.value.length >= 3) {
-    userEmail.value = '';
-    userMessage.value = '';
+    userEmail.value = userMessage.value = '';
     localStorage.removeItem(STORAGE_KEY);
     console.log('Output object from local storage ', userTypedText);
+    userTypedText = {};
   } else {
     return alert(
       'The email address and description should contain 3 or more symbols!!!'
